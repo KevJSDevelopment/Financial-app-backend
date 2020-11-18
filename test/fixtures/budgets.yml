@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  date_from: 2020-11-17 11:55:13
+  date_to: 2020-11-17 11:55:13
+  total: 1.5
+  user_id: 1
+
+two:
+  name: MyString
+  date_from: 2020-11-17 11:55:13
+  date_to: 2020-11-17 11:55:13
+  total: 1.5
+  user_id: 1
