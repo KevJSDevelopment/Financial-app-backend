@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_11_17_170402) do
     t.string "name"
     t.string "date_from"
     t.string "date_to"
+    t.string "plan_type"
     t.float "total"
     t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false

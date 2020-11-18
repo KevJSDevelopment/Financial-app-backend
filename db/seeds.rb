@@ -16,6 +16,6 @@ user = User.create(name: "user_good", password: "user_pass")
 
 i = 0
 (5).times do 
-    Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", total: 700.00 + i, user_id: user.id)
+    Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", plan_type: "budget", total: 700.00 + i, user_id: user.id)
     i = i + 1
 end
