@@ -16,12 +16,12 @@ ExpenseCategory.delete_all
 budgets = ["food", "shopping", "yearly spending", "vacation", "weekends"]
 food = ["pizza","chinese", "sushi", "groceries", "eatingOut"]
 user = User.create(name: "user_good", password: "user_pass")
-
+plan_types = ["simple","planned","full"]
 i = 0
-food_budget = Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", plan_type: "budget", total: 700.00 + i, user_id: user.id)
+food_budget = Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", plan_type: "simple", total: 700.00 + i, user_id: user.id)
 i += 1
 (4).times do 
-    Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", plan_type: "budget", total: 700.00 + i, user_id: user.id)
+    Budget.create(name: budgets[i], date_from: "10/17/2020",  date_to: "10/17/2021", plan_type: "simple", total: 700.00 + i, user_id: user.id)
     i = i + 1
 end
 

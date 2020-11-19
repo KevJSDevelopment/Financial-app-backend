@@ -3,11 +3,17 @@ class Budget < ApplicationRecord
     has_many :incomes
     belongs_to :user
 
-    def get_expense_info(expensesArr)
-        categories = expensesArr.map do |expense|
-            { cat: expense.expense_category, expenses: expense.expense_category.expenses }
-        end
+    def get_expense_info(expenses_arr)
         # byebug
-        return categories.uniq { |e| e[:cat] }
+        if expenses_arr.length > 0
+            categories = expenses_arr.map do |expense|
+                { cat: expense.expense_category, expenses: expense.expense_category.expenses }
+            end
+            # byebug
+            return categories.uniq { |e| e[:cat] }
+        else
+            categories = []
+            return categories
+        end
     end
 end

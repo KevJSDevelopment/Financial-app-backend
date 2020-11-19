@@ -1,6 +1,7 @@
 class BudgetsController < ApplicationController
     def index 
         budgets = Budget.all
+        # byebug
         render json: {
             budgets: budgets
         }
@@ -25,6 +26,7 @@ class BudgetsController < ApplicationController
 
     def show
         budget = Budget.find(params[:id])
+        # byebug
         if budget
             render json: {
                 budget: budget,
