@@ -28,7 +28,7 @@ class BudgetsController < ApplicationController
         if budget
             render json: {
                 budget: budget,
-                expenses: budget.expenses,
+                expenseInfo: budget.get_expense_info(budget.expenses),
                 auth: true
             }
         else

@@ -5,7 +5,7 @@ class CreateExpenses < ActiveRecord::Migration[6.0]
       t.text :description
       t.string :date
       t.integer :budget_id
-      t.integer :category_id
+      t.integer :expense_category_id
 
       t.timestamps
     end
