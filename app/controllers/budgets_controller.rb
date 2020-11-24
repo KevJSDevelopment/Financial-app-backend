@@ -44,6 +44,22 @@ class BudgetsController < ApplicationController
         end
     end
 
+    def update
+        budget = Budget.find(params[:id])
+        if budget
+            budget.update(total: params[:total])
+            render json: {
+                budget: budget,
+                auth: true,
+                expenseInfo: budget.get_expense_info(budget.expenses)
+            }
+        else
+            render json: {
+                auth: false
+            }
+        end
+    end
+
     def destroy
         budget = Budget.find(params[:id])
         name = budget.name
