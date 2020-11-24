@@ -43,4 +43,22 @@ class BudgetsController < ApplicationController
             }
         end
     end
+
+    def destroy
+        budget = Budget.find(params[:id])
+        name = budget.name
+        if budget
+            budget.destroy()
+            render json: {
+                auth: true,
+                message: "Successfully deleted #{name} financial plan"
+            }
+        else 
+            render json: {
+                auth: false,
+                message: "Unable to find the plan you want to remove"
+            }
+        end
+    end
+
 end
