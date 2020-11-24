@@ -15,6 +15,22 @@ class ExpenseCategoriesController < ApplicationController
         end
     end
 
+    def show
+        expense_category = ExpenseCategory.find(params[:id])
+        if expense_category
+            render json: {
+                expense_category: expense_category,
+                auth: true,
+                message: "Expense category found"
+            }
+        else
+            render json: {
+                auth: false,
+                message: "Could not find expense Category with id #{params[:id]}"
+            }
+        end
+    end
+
     def find_category
         expense_category = ExpenseCategory.find_by(name: params[:name])
         if expense_category

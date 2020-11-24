@@ -1,6 +1,8 @@
 class BudgetsController < ApplicationController
     def index 
-        budgets = Budget.all
+        token = request.headers["Authentication"].split(" ")[1]
+        user = User.find(decode(token)["user_id"])
+        budgets = Budget.where(user_id: user.id)
         # byebug
         render json: {
             budgets: budgets
@@ -8,7 +10,9 @@ class BudgetsController < ApplicationController
     end
 
     def create
-        budget = Budget.new(name: params[:name], plan_type: params[:type], date_from: params[:date_from], date_to: params[:date_to], total: 0.00, user_id: User.first.id)
+        token = request.headers["Authentication"].split(" ")[1]
+        user = User.find(decode(token)["user_id"])
+        budget = Budget.new(name: params[:name], plan_type: params[:type], date_from: params[:date_from], date_to: params[:date_to], total: 0.00, user_id: user.id)
         if budget.save
             render json: {
                 budget: budget,
