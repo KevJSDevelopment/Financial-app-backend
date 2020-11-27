@@ -33,4 +33,5 @@ class ExpensesController < ApplicationController
             }
         end
     end
+    
 end

@@ -36,4 +36,21 @@ class UsersController < ApplicationController
         end
     end
 
+    def show
+        token = request.headers["Authentication"].split(" ")[1]
+        user = User.find(decode(token)["user_id"])
+        if user 
+            render json: {
+                auth: true,
+                user: user,
+                token: encode({user_id: user.id})
+            }
+        else
+            render json: {
+                auth: false,
+                info: "Not a valid user"
+            }
+        end
+    end
+
 end
