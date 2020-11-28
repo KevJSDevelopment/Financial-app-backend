@@ -14,4 +14,16 @@ class Budget < ApplicationRecord
             return categories
         end
     end
+
+    def get_income_info(income_arr)
+        if income_arr.length > 0
+            categories = income_arr.map do |income|
+                { cat: income.income_category, incomes: income.income_category.incomes }
+            end
+            return categories.uniq { |e| e[:cat] }
+        else
+            categories = []
+            return categories
+        end
+    end
 end
