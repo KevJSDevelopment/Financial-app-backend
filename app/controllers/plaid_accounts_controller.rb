@@ -65,6 +65,7 @@ class PlaidAccountsController < ApplicationController
                 p_item_id: item_id, 
                 p_institution: params['institution'] 
             })
+            # byebug
             transactions = getTransactions(pi, user)
             accounts = getBalances(pi, user)
             render json: {
@@ -78,7 +79,24 @@ class PlaidAccountsController < ApplicationController
                 message: "User not found for access"
             }
         end
-    end                       
+    end                  
+    
+    def index
+        token = request.headers["Authentication"].split(" ")[1]
+        user = User.find(decode(token)["user_id"])
+        accounts = PlaidAccount.where(user_id: user.id)
+        if user
+            render json: {
+                auth: true,
+                accounts: accounts
+            }
+        else
+            render json: {
+                auth: false,
+                message: user.errors.full_messages
+            }
+        end
+    end
 
     # def getData # account will have many institutions. make fetch for each institution and consolidate 
     #     accounts = []
@@ -102,9 +120,9 @@ class PlaidAccountsController < ApplicationController
         begin
             product_response = @@client.transactions.get(item.p_access_token, year_ago, now)
             transactions = product_response.transactions.map do |transaction|  # map user into each transaction object 
-                byebug
+                # byebug
                 trans_category = TransactionCategory.create(name: transaction.category[0])
-                Transaction.create(plaid_account_id: pi.id, value: transaction.amount, date: transaction.date, description: transaction.category[1], transaction_category_id: trans_category.id)
+                Transaction.create(plaid_account_id: item.id, value: transaction.amount, date: transaction.date, description: transaction.category[1], transaction_category_id: trans_category.id)
                 transaction[:user] = {username: user.name, id: user.id} # add a user key and set it to the owner
                 transaction[:institution] = item.p_institution # add institution name
                 transaction[:item_id] = item.p_item_id
@@ -114,11 +132,9 @@ class PlaidAccountsController < ApplicationController
             error_response = format_error(e)
             transactions =  error_response
         end
-        byebug
+        # byebug
         return transactions # [ {trans}, {trans}, {trans}]
     end
-
-
 
     def getBalances(item, user)
         begin

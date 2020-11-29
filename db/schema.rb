@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 2020_11_27_171342) do
     t.string "description"
     t.string "date"
     t.integer "plaid_account_id"
+    t.integer "transaction_category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

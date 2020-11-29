@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :transaction_categories, only: [:create, :index, :update]
-  resources :transactions, only: [:index, :update]
+  resources :transaction_categories, only: [:create, :index, :update, :show]
+  resources :transactions, only: [:update]
   resources :plaid_accounts, only: [:index]
   resources :incomes
   resources :expense_categories, only: [:create, :show]
@@ -15,5 +15,6 @@ Rails.application.routes.draw do
   get "/link", to: "plaid_accounts#create_link_token"
   post "/get_access_token", to: "plaid_accounts#get_access_token"
   get "/users", to: "users#show"
+  post "/transactions", to: "transactions#index"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
