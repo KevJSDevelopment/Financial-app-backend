@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :plaid_accounts, only: [:index]
   resources :incomes
   resources :expense_categories, only: [:create, :show]
-  resources :income_categories, only: [:create]
+  resources :income_categories, only: [:create, :show]
   resources :categories
   resources :expenses
   resources :budgets

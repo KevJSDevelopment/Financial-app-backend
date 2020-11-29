@@ -5,6 +5,7 @@ class BudgetsController < ApplicationController
         budgets = Budget.where(user_id: user.id)
         # byebug
         render json: {
+            auth: true,
             budgets: budgets
         }
     end
