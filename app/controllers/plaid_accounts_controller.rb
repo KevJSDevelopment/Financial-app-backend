@@ -88,7 +88,7 @@ class PlaidAccountsController < ApplicationController
         if user
             render json: {
                 auth: true,
-                accounts: accounts
+                accounts: PlaidAccount.get_transactions(accounts)
             }
         else
             render json: {

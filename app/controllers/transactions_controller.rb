@@ -4,7 +4,7 @@ class TransactionsController < ApplicationController
         transactions = Transaction.where(plaid_account_id: params[:plaid_account_id])
         render json: {
             auth: true,
-            transactions: transactions
+            transactions: Transaction.get_categories(transactions)
         }
     end
     

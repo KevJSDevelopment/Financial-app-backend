@@ -10,6 +10,7 @@ class TransactionCategoriesController < ApplicationController
 
     def show
         category = TransactionCategory.find(params[:id])
+        byebug
         if category
             render json: {
                 transaction_category: category,
