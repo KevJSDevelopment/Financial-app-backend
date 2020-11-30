@@ -11,7 +11,7 @@ class ExpensesController < ApplicationController
         else
             render json: {
                 auth: false,
-                message: expense.error.full_messages
+                message: expense.errors.full_messages
             }
         end
     end
@@ -33,4 +33,5 @@ class ExpensesController < ApplicationController
             }
         end
     end
+    
 end

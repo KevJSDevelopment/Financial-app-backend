@@ -12,6 +12,9 @@ Income.delete_all
 Expense.delete_all
 IncomeCategory.delete_all
 ExpenseCategory.delete_all
+Transaction.delete_all
+PlaidAccount.delete_all
+TransactionCategory.delete_all
 
 budgets = ["food", "shopping", "yearly spending", "vacation", "weekends"]
 food = ["pizza","chinese", "sushi", "groceries", "eatingOut"]
