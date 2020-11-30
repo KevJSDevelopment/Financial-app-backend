@@ -11,7 +11,7 @@ class IncomesController < ApplicationController
         else
             render json: {
                 auth: false,
-                message: income.error.full_messages
+                message: income.errors.full_messages
             }
         end
     end
