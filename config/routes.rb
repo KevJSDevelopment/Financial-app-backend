@@ -17,5 +17,6 @@ Rails.application.routes.draw do
   get "/users", to: "users#show"
   post "/transactions", to: "transactions#index"
   post "/bar_comparison", to: "budgets#bar_comparison"
+  post "/line_comparison", to: "budgets#line_comparison"
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

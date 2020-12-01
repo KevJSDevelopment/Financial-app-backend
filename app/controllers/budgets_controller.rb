@@ -1,3 +1,4 @@
+require 'date'
 class BudgetsController < ApplicationController
 
     def bar_comparison
@@ -45,9 +46,9 @@ class BudgetsController < ApplicationController
                         expense_keys.push(transaction["transaction_category"]["name"])
                     end
                     if !actual_expenses[transaction["transaction_category"]["name"]]
-                        actual_expenses[transaction["transaction_category"]["name"]] = transaction["transaction"]["value"]
+                        actual_expenses[transaction["transaction_category"]["name"]] = (transaction["transaction"]["value"] * -1)
                     else
-                        actual_expenses[transaction["transaction_category"]["name"]] += transaction["transaction"]["value"]
+                        actual_expenses[transaction["transaction_category"]["name"]] -= transaction["transaction"]["value"]
                     end
                 end
             end
@@ -112,7 +113,121 @@ class BudgetsController < ApplicationController
     end
 
     def line_comparison
+        token = request.headers["Authentication"].split(" ")[1]
+        user = User.find(decode(token)["user_id"])
+        plan = params[:plan]
+        accounts = params[:accounts]
 
+        startDate = Date.strptime(plan["budget"]["date_from"], "%m/%d/%Y")
+        endDate = Date.strptime(plan["budget"]["date_to"], "%m/%d/%Y")
+
+        day_difference = ((endDate - startDate) / 5).to_f.ceil
+
+        keys = []
+
+        lastDate = startDate
+        (4).times do
+            newDate = (lastDate + day_difference)
+            keys.push("#{lastDate.strftime('%m/%d/%Y')} - #{newDate.strftime('%m/%d/%Y')}")
+            lastDate = newDate
+        end
+
+        keys.push("#{lastDate.strftime('%m/%d/%Y')} - #{endDate.strftime('%m/%d/%Y')}")
+
+        # byebug
+        expected_income_hash = {
+            "id": "Expected",
+            "color": "hsl(11, 70%, 50%)",
+            "data": []
+        }
+        expected_expense_hash = {
+            "id": "Expected",
+            "color": "hsl(11, 70%, 50%)",
+            "data": []
+        }
+        actual_income_hash = {
+            "id": "Actual",
+            "color": "hsl(261, 70%, 50%)",
+            "data": []
+        }
+        actual_expense_hash = {
+            "id": "Actual",
+            "color": "hsl(261, 70%, 50%)",
+            "data": []
+        }
+        keys.map do |key|
+            key_arr = key.split("-")
+            key_start = Date.strptime(key_arr[0].strip, "%m/%d/%Y")
+            key_end = Date.strptime(key_arr[1].strip, "%m/%d/%Y")
+            # byebug
+            income_sum = 0.00
+            plan["incomeInfo"].map do |income_obj|
+                income_obj["incomes"].each do |income|
+                    # byebug
+                    if Date.strptime(income["date"], "%m/%d/%Y") >= key_start && Date.strptime(income["date"], "%m/%d/%Y") <= key_end
+                        income_sum += income["value"]
+                    end
+                end
+            end
+            income_hash = {
+                "x": key,
+                "y": income_sum
+            }
+            expected_income_hash[:data].push(income_hash)
+
+            expense_sum = 0.00
+            plan["expenseInfo"].map do |expense_obj|
+                expense_obj["expenses"].each do |expense|
+                    if Date.strptime(expense["date"], "%m/%d/%Y") >= key_start && Date.strptime(expense["date"], "%m/%d/%Y") <= key_end
+                        expense_sum += expense["cost"]
+                    end
+                end
+            end
+            expense_hash = {
+                "x": key,
+                "y": expense_sum
+            }
+            expected_expense_hash[:data].push(expense_hash)
+
+            actual_income_sum = 0.00
+            actual_expense_sum = 0.00
+            accounts.map do |account|
+                account["transactions"].each do |transaction|
+                    date_arr = transaction["transaction"]["date"].split("-")
+                    date_formatted = [date_arr[1],date_arr[2], date_arr[0]].join("/")
+                    # byebug
+                    if Date.strptime(date_formatted, "%m/%d/%Y") >= key_start && Date.strptime(date_formatted, "%m/%d/%Y") <= key_end 
+                        if transaction["transaction"]["value"] >= 0
+                            actual_income_sum += transaction["transaction"]["value"]
+                        else
+                            actual_expense_sum -= transaction["transaction"]["value"]
+                        end
+                    end
+                end
+            end
+
+            actual_income = {
+                "x": key,
+                "y": actual_income_sum
+            }
+            actual_expense = {
+                "x": key,
+                "y": actual_expense_sum
+            }
+
+            actual_income_hash[:data].push(actual_income)
+            actual_expense_hash[:data].push(actual_expense)
+        end
+
+        income_data = [expected_income_hash, actual_income_hash]
+        expense_data = [expected_expense_hash, actual_expense_hash]
+
+        # byebug
+
+        render json: {
+            incomeData: income_data,
+            expenseData: expense_data
+        }
     end
 
     def index 
