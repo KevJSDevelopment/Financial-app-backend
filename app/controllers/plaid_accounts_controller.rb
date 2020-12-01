@@ -1,6 +1,6 @@
 require 'date'
 class PlaidAccountsController < ApplicationController
-    @@client = Plaid::Client.new(env: ENV["SANDBOX"], client_id: ENV["CLIENT_ID"], secret: ENV["SANDBOX_SECRET"])
+    @@client = Plaid::Client.new(env: "sandbox", client_id: ENV["CLIENT_ID"], secret: ENV["SANDBOX_SECRET"])
     # public_key: ENV["PUBLIC_KEY"])
 
     # response = @@client.sandbox.sandbox_public_token.create(
@@ -15,6 +15,7 @@ class PlaidAccountsController < ApplicationController
     def create_link_token
         token = request.headers["Authentication"].split(" ")[1]
         user = User.find(decode(token)["user_id"])
+        # byebug
         if user
             link_token_response = @@client.link_token.create(
                 user: {
@@ -34,6 +35,7 @@ class PlaidAccountsController < ApplicationController
                 }
             )
             link_token = link_token_response.link_token
+            # byebug
             render json: {
                 auth: true,
                 link: link_token

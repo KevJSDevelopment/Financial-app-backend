@@ -101,8 +101,8 @@ class BudgetsController < ApplicationController
         end
         # byebug
 
-        inc_keys = ["Expected", "Actual"]
-        exp_keys = ["Expected", "Actual"]
+        inc_keys = ["Actual","Expected"]
+        exp_keys = ["Actual","Expected"]
 
         render json: {
             incomeData: income_data,
@@ -219,8 +219,8 @@ class BudgetsController < ApplicationController
             actual_expense_hash[:data].push(actual_expense)
         end
 
-        income_data = [expected_income_hash, actual_income_hash]
-        expense_data = [expected_expense_hash, actual_expense_hash]
+        income_data = [actual_income_hash, expected_income_hash]
+        expense_data = [ actual_expense_hash, expected_expense_hash]
 
         # byebug
 
