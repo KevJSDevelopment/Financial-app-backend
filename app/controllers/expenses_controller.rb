@@ -18,7 +18,7 @@ class ExpensesController < ApplicationController
 
     def update
         expense = Expense.find(params[:id])
-        # byebug
+        
         if expense
             expense.update(expense_category_id: params[:expense_category_id])
             render json: {

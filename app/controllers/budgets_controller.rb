@@ -6,7 +6,7 @@ class BudgetsController < ApplicationController
         user = User.find(decode(token)["user_id"])
         plan = params[:plan]
         accounts = params[:accounts]
-        # byebug
+        
         income_keys = []
         expense_keys = []
 
@@ -99,7 +99,7 @@ class BudgetsController < ApplicationController
             end
             expense_hash
         end
-        # byebug
+        
 
         inc_keys = ["Actual","Expected"]
         exp_keys = ["Actual","Expected"]
@@ -134,7 +134,7 @@ class BudgetsController < ApplicationController
 
         keys.push("#{lastDate.strftime('%m/%d/%Y')} - #{endDate.strftime('%m/%d/%Y')}")
 
-        # byebug
+        
         expected_income_hash = {
             "id": "Expected",
             "color": "hsl(11, 70%, 50%)",
@@ -159,11 +159,11 @@ class BudgetsController < ApplicationController
             key_arr = key.split("-")
             key_start = Date.strptime(key_arr[0].strip, "%m/%d/%Y")
             key_end = Date.strptime(key_arr[1].strip, "%m/%d/%Y")
-            # byebug
+            
             income_sum = 0.00
             plan["incomeInfo"].map do |income_obj|
                 income_obj["incomes"].each do |income|
-                    # byebug
+                    
                     if Date.strptime(income["date"], "%m/%d/%Y") >= key_start && Date.strptime(income["date"], "%m/%d/%Y") <= key_end
                         income_sum += income["value"]
                     end
@@ -195,7 +195,7 @@ class BudgetsController < ApplicationController
                 account["transactions"].each do |transaction|
                     date_arr = transaction["transaction"]["date"].split("-")
                     date_formatted = [date_arr[1],date_arr[2], date_arr[0]].join("/")
-                    # byebug
+                    
                     if Date.strptime(date_formatted, "%m/%d/%Y") >= key_start && Date.strptime(date_formatted, "%m/%d/%Y") <= key_end 
                         if transaction["transaction"]["value"] >= 0
                             actual_income_sum += transaction["transaction"]["value"]
@@ -222,7 +222,7 @@ class BudgetsController < ApplicationController
         income_data = [actual_income_hash, expected_income_hash]
         expense_data = [ actual_expense_hash, expected_expense_hash]
 
-        # byebug
+        
 
         render json: {
             incomeData: income_data,
@@ -234,7 +234,7 @@ class BudgetsController < ApplicationController
         token = request.headers["Authentication"].split(" ")[1]
         user = User.find(decode(token)["user_id"])
         budgets = Budget.where(user_id: user.id)
-        # byebug
+        
         render json: {
             auth: true,
             budgets: budgets
@@ -262,7 +262,7 @@ class BudgetsController < ApplicationController
 
     def show
         budget = Budget.find(params[:id])
-        # byebug
+        
         if budget
             render json: {
                 budget: budget,

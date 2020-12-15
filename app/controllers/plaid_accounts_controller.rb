@@ -11,11 +11,11 @@ class PlaidAccountsController < ApplicationController
     # # exchanged for an access_token
     # publicToken = response.public_token
     # exchange_token_response = @@client.item.public_token.exchange(publicToken)
-    # byebug
+    
     def create_link_token
         token = request.headers["Authentication"].split(" ")[1]
         user = User.find(decode(token)["user_id"])
-        # byebug
+        
         if user
             link_token_response = @@client.link_token.create(
                 user: {
@@ -35,7 +35,7 @@ class PlaidAccountsController < ApplicationController
                 }
             )
             link_token = link_token_response.link_token
-            # byebug
+            
             render json: {
                 auth: true,
                 link: link_token
@@ -50,12 +50,12 @@ class PlaidAccountsController < ApplicationController
 
     # on user adding new institution 
     def get_access_token 
-        # byebug
+        
         token = request.headers["Authentication"].split(" ")[1]
         user = User.find(decode(token)["user_id"])
         if user
             link_token_response = @@client.item.public_token.exchange(params['public_token']) # get access
-            # byebug
+            
             access_token = link_token_response[:access_token]
             item_id = link_token_response[:item_id]
             # create plaid item (institution)
@@ -65,9 +65,9 @@ class PlaidAccountsController < ApplicationController
                 p_item_id: item_id, 
                 p_institution: params['institution'] 
             })
-            # byebug
+            
             transactions = getTransactions(pi, user)
-            # byebug
+            
             accounts = getBalances(pi, user)
             render json: {
                 auth: true, 
@@ -116,22 +116,22 @@ class PlaidAccountsController < ApplicationController
 
     def getTransactions(item, user)
         now = Date.today
-        # byebug
+        
         year_ago = (now - 30)
-        # byebug
+        
         begin
             product_response = @@client.transactions.get(item.p_access_token, year_ago, now)
             transactions = product_response.transactions.map do |transaction|  # map user into each transaction object 
                 category_names = TransactionCategory.all.map do |category|
                     category.name
                 end 
-                # byebug
+                
                 if category_names.include? transaction.category[0] 
                     trans_category = TransactionCategory.find_by(name: transaction.category[0])
                 else
                     trans_category = TransactionCategory.create(name: transaction.category[0])
                 end
-                # byebug
+                
                 Transaction.create(plaid_account_id: item.id, value: transaction.amount, date: transaction.date, description: transaction.category[1], transaction_category_id: trans_category.id)
                 transaction[:user] = {username: user.name, id: user.id} # add a user key and set it to the owner
                 transaction[:institution] = item.p_institution # add institution name
@@ -142,7 +142,7 @@ class PlaidAccountsController < ApplicationController
             error_response = format_error(e)
             transactions =  error_response
         end
-        # byebug
+        
         return transactions # [ {trans}, {trans}, {trans}]
     end
 

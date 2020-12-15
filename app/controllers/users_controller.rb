@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     end
 
     def login
-        # byebug
+        
         user = User.find_by(name: params[:username])
         if user && user.authenticate(params[:password])
             render json: {
