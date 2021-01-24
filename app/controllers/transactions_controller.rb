@@ -7,9 +7,5 @@ class TransactionsController < ApplicationController
             transactions: Transaction.get_categories(transactions)
         }
     end
-    
-    def update
-
-    end
 
 end

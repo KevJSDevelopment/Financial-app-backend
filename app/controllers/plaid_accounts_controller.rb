@@ -1,16 +1,6 @@
 require 'date'
 class PlaidAccountsController < ApplicationController
     @@client = Plaid::Client.new(env: "sandbox", client_id: ENV["CLIENT_ID"], secret: ENV["SANDBOX_SECRET"])
-    # public_key: ENV["PUBLIC_KEY"])
-
-    # response = @@client.sandbox.sandbox_public_token.create(
-    #     institution_id: "ins_109508",
-    #     initial_products: ['transactions']
-    # )
-    # # The generated public_token can now be
-    # # exchanged for an access_token
-    # publicToken = response.public_token
-    # exchange_token_response = @@client.item.public_token.exchange(publicToken)
     
     def create_link_token
         token = request.headers["Authentication"].split(" ")[1]
@@ -188,28 +178,5 @@ class PlaidAccountsController < ApplicationController
     #         transactions << productTransactions
     #     end
     #     render json: transactions.flatten
-    # end
-
-    # def deleteItem 
-    #     item = PlaidAccount.find_by(p_item_id: params[:id])
-    #     item_id = item.p_item_id
-    #     @@client.item.remove(item.p_access_token)
-    #     item.destroy()
-    #     render json: {item_id: item_id}
-    # end
-
-
-    # def format_error(err)
-    #     { 
-    #         error: {
-    #             error_code: err.error_code,
-    #             error_message: err.error_message,
-    #             error_type: err.error_type
-    #         }
-    #     }
-    # end
-
-    # def strong_params
-    #     params.permit(:institution)
     # end
 end
