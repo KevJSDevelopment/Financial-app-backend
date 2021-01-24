@@ -1,9 +1,5 @@
 class TransactionCategoriesController < ApplicationController
 
-    def create
-
-    end
-
     def index
         transaction_categories = TransactionCategory.all.uniq
         if transaction_categories != []
@@ -33,10 +29,6 @@ class TransactionCategoriesController < ApplicationController
                 message: "Could not find category"
             }
         end
-    end
-
-    def update
-
     end
 
 end
