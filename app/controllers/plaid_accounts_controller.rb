@@ -111,7 +111,6 @@ class PlaidAccountsController < ApplicationController
         
         begin
             product_response = @@client.transactions.get(item.p_access_token, year_ago, now)
-            byebug
             transactions = product_response.transactions.map do |transaction|  # map user into each transaction object 
                 category_names = TransactionCategory.all.map do |category|
                     category.name
